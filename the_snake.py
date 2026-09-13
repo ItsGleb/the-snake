@@ -40,7 +40,7 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(self, body_color, position=None):
+    def __init__(self, body_color=(255, 255, 255), position=None):
         if position is None:
             self.position = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         else:
