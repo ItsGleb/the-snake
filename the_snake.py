@@ -169,13 +169,13 @@ def handle_keys(game_object, speed):
                 speed = max(speed - SPEED_STEP, MIN_SPEED)
     return speed
 
+
 def main():
     """Точка входа: запускает игровой цикл."""
     pg.init()
 
     snake = Snake(SNAKE_COLOR)
     apple = Apple(APPLE_COLOR, snake.positions)
-    
     speed = SPEED
 
     while True:
@@ -184,7 +184,7 @@ def main():
         pg.display.set_caption(
             f'Змейка. Для выхода из игры нажмите на кнопку Х '
             f'(скорость: {speed})'
-        )   
+        )
         snake.update_direction()
 
         # Победа: змейка заполнила всё поле
