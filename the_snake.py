@@ -55,7 +55,7 @@ class GameObject:
 
     def draw(self):
         """Отрисовка объекта. Переопределяется в наследниках."""
-        pass
+    
 
 
 class Apple(GameObject):
@@ -63,18 +63,17 @@ class Apple(GameObject):
 
     def __init__(self, body_color=APPLE_COLOR, snake_positions=None):
         super().__init__(body_color)
-        self.randomize_position(snake_positions)  # Позиция яблочка
+        self.randomize_position(snake_positions or [])  # Позиция яблочка
 
-    def randomize_position(self, snake_positions=None):
+    def randomize_position(self, snake_positions):
         """Возвращает случайную свободную позицию на поле."""
-        occupied = set(snake_positions or [])
+        occupied = set(snake_positions)
         while True:
-            new_position = (
+            self.position = (
                 choice(range(GRID_WIDTH)) * GRID_SIZE,
                 choice(range(GRID_HEIGHT)) * GRID_SIZE,
             )
-            if new_position not in occupied:
-                self.position = new_position
+            if self.position not in occupied:
                 break
 
     def draw(self):
@@ -190,6 +189,10 @@ def main():
         # Проверяем, съест ли змейка яблоко на следующем шаге
         if snake.get_head_position() == apple.position:
             snake.length += 1
+            # Победа: змейка заполнила всё поле
+            if snake.length >= GRID_WIDTH * GRID_HEIGHT:
+                pg.quit()
+                raise SystemExit
             apple.randomize_position(snake.positions)
         # Если не съела — проверяем столкновение с собой
         elif snake.get_head_position() in snake.positions[1:]:
