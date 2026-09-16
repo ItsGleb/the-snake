@@ -170,7 +170,7 @@ def main():
     apple = Apple(APPLE_COLOR, snake.positions)
     speed = SPEED
 
-# Очищаем экран один раз при запуске игры
+    # Очищаем экран один раз при запуске игры
     screen.fill(BOARD_BACKGROUND_COLOR)
     while True:
         clock.tick(speed)
@@ -197,11 +197,9 @@ def main():
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
 
-        
         apple.draw()
         snake.draw()
         pg.display.update()
-
 
 if __name__ == '__main__':
     main()
