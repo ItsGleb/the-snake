@@ -55,7 +55,6 @@ class GameObject:
 
     def draw(self):
         """Отрисовка объекта. Переопределяется в наследниках."""
-    
 
 
 class Apple(GameObject):
