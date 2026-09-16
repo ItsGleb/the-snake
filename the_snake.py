@@ -90,16 +90,13 @@ class Snake(GameObject):
     def __init__(self, body_color=SNAKE_COLOR):
         super().__init__(body_color)
         self.reset()
+        self.direction = RIGHT
 
     def reset(self):
         """Сброс змейки в начальное состояние."""
-        start_x = GRID_SIZE
-        middle_y_index = GRID_HEIGHT // 2
-        start_y = middle_y_index * GRID_SIZE
-
-        self.positions = [(start_x, start_y)]
+        self.positions = [self.position]
         self.length = 1
-        self.direction = RIGHT
+        self.direction = choice([UP, DOWN, LEFT, RIGHT])
         self.next_direction = None
         self.last = None
 
@@ -110,23 +107,20 @@ class Snake(GameObject):
     def move(self):
         """Двигает змейку на одну клетку в текущем направлении."""
         head_x, head_y = self.get_head_position()
-        dx, dy = self.direction
-        new_x = (head_x + dx * GRID_SIZE) % SCREEN_WIDTH
-        new_y = (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
-        new_head = (new_x, new_y)
+        delta_x, delta_y = self.direction
+        self.position = (
+            (head_x + delta_x * GRID_SIZE) % SCREEN_WIDTH,
+            (head_y + delta_y * GRID_SIZE) % SCREEN_HEIGHT
+        )
 
-        self.positions.insert(0, new_head)
+        self.positions.insert(0, self.position)
 
         if len(self.positions) > self.length:
-            self.last = self.positions[-1]
-            self.positions.pop()
+            self.last = self.positions.pop()  
         else:
             self.last = None
 
-    def eat(self):
-        """Увеличивает длину змейки. Вызывается извне при съедании."""
-        self.length += 1
-        self.last = None
+
 
     def update_direction(self):
         """Применяет отложенное направление."""
@@ -178,6 +172,8 @@ def main():
     apple = Apple(APPLE_COLOR, snake.positions)
     speed = SPEED
 
+    # Очищаем экран один раз при запуске игры
+    screen.fill(BOARD_BACKGROUND_COLOR)
     while True:
         clock.tick(speed)
         speed = handle_keys(snake, speed)
@@ -192,29 +188,26 @@ def main():
             pg.quit()
             raise SystemExit
 
+        snake.move()
         # Проверяем, съест ли змейка яблоко на следующем шаге
-        head_x, head_y = snake.get_head_position()
-        dx, dy = snake.direction
-        next_head = (
-            (head_x + dx * GRID_SIZE) % SCREEN_WIDTH,
-            (head_y + dy * GRID_SIZE) % SCREEN_HEIGHT
-        )
-
-        if next_head == apple.position:
-            snake.eat()
+        if snake.get_head_position() == apple.position:
+            # Увеличиваем длину на 1
+            snake.length += 1
+            # Сразу задаем новую позицию яблока
             apple.randomize_position(snake.positions)
 
-        snake.move()
-
         # Проверка столкновения с собой
-        head = snake.get_head_position()
-        if head in snake.positions[1:]:
+        # Проверяем, съела ли змейка яблоко
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+            apple.randomize_position(snake.positions)
+        # Если не съела — проверяем столкновение с собой
+        elif snake.get_head_position() in snake.positions[1:]:
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
-            continue
 
-        screen.fill(BOARD_BACKGROUND_COLOR)
+        
         apple.draw()
         snake.draw()
         pg.display.update()
