@@ -201,5 +201,6 @@ def main():
         snake.draw()
         pg.display.update()
 
+
 if __name__ == '__main__':
     main()
