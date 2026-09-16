@@ -116,11 +116,9 @@ class Snake(GameObject):
         self.positions.insert(0, self.position)
 
         if len(self.positions) > self.length:
-            self.last = self.positions.pop()  
+            self.last = self.positions.pop()
         else:
             self.last = None
-
-
 
     def update_direction(self):
         """Применяет отложенное направление."""
@@ -172,7 +170,7 @@ def main():
     apple = Apple(APPLE_COLOR, snake.positions)
     speed = SPEED
 
-    # Очищаем экран один раз при запуске игры
+# Очищаем экран один раз при запуске игры
     screen.fill(BOARD_BACKGROUND_COLOR)
     while True:
         clock.tick(speed)
@@ -190,14 +188,6 @@ def main():
 
         snake.move()
         # Проверяем, съест ли змейка яблоко на следующем шаге
-        if snake.get_head_position() == apple.position:
-            # Увеличиваем длину на 1
-            snake.length += 1
-            # Сразу задаем новую позицию яблока
-            apple.randomize_position(snake.positions)
-
-        # Проверка столкновения с собой
-        # Проверяем, съела ли змейка яблоко
         if snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
