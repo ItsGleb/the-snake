@@ -168,8 +168,6 @@ def main():
     apple = Apple(APPLE_COLOR, snake.positions)
     speed = SPEED
 
-    # Очищаем экран один раз при запуске игры
-    screen.fill(BOARD_BACKGROUND_COLOR)
     while True:
         clock.tick(speed)
         speed = handle_keys(snake, speed)
@@ -178,11 +176,6 @@ def main():
             f'(скорость: {speed})'
         )
         snake.update_direction()
-
-        # Победа: змейка заполнила всё поле
-        if snake.length >= GRID_WIDTH * GRID_HEIGHT:
-            pg.quit()
-            raise SystemExit
 
         snake.move()
         # Проверяем, съест ли змейка яблоко на следующем шаге
@@ -194,7 +187,12 @@ def main():
                 raise SystemExit
             apple.randomize_position(snake.positions)
         # Если не съела — проверяем столкновение с собой
-        elif snake.get_head_position() in snake.positions[1:]:
+        # Тестил и получалось укусить себя только при длине = 5 
+        # Но по идее минимальная длина = 4, тк 2х2 квадратик
+        # Проверяем столкновение с телом, начиная с шеи (индекс 1).
+        elif (
+            len(snake.positions) >= 4
+            and snake.get_head_position() in snake.positions[1:]):
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
