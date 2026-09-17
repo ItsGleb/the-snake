@@ -192,7 +192,7 @@ def main():
         # Проверяем столкновение с телом, начиная с шеи (индекс 1).
         elif (
             len(snake.positions) >= 4
-            and snake.get_head_position() in snake.positions[1:]):
+                and snake.get_head_position() in snake.positions[1:]):
             snake.reset()
             apple.randomize_position(snake.positions)
             screen.fill(BOARD_BACKGROUND_COLOR)
